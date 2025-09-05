@@ -1,0 +1,40 @@
+plugins {
+	id 'java'
+	id 'application'
+}
+
+group = 'com.game'
+version = '1.0'
+
+application {
+	mainClass = 'game.Game'
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// For console handling and colors
+	implementation 'org.fusesource.jansi:jansi:2.4.0'
+
+	// For testing (optional)
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+}
+
+tasks.jar {
+	manifest {
+		attributes(
+			'Main-Class': 'game.Game'
+		)
+	}
+	from {
+		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
