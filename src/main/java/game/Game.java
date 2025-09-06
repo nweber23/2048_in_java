@@ -1,6 +1,8 @@
+// ...existing code...
 package game;
 
 import input.InputHandler;
+import input.TerminalUtils;
 import ui.ConsoleRenderer;
 import ui.Menu;
 import utils.ScoreManager;
@@ -95,6 +97,21 @@ public class Game {
 				}
 			}
 		}
+
+		// Enable raw mode as early as possible so the menu receives raw input.
+		try {
+			TerminalUtils.enableRawMode();
+		} catch (Throwable t) {
+			// ignore; best-effort
+		}
+		// Ensure terminal restored on exit
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			try {
+				TerminalUtils.disableRawMode();
+			} catch (Throwable t) {
+				// ignore
+			}
+		}));
 
 		Menu menu = new Menu();
 		Menu.MenuResult result = menu.show();
