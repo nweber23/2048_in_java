@@ -3,34 +3,36 @@ package input;
 import java.io.*;
 
 public class TerminalUtils {
-	// Only works on Unix-like systems (uses stty)
 	private static String originalConfig = null;
+	private static int rawModeCount = 0;
 
 	public static boolean isUnixLike() {
 		String os = System.getProperty("os.name").toLowerCase();
 		return !os.contains("win");
 	}
 
-	public static void enableRawMode() {
+	public static synchronized void enableRawMode() {
 		if (!isUnixLike()) return;
 		try {
-			// save current settings
-			originalConfig = exec(new String[] { "sh", "-c", "stty -g < /dev/tty" });
-			// set raw mode, disable echo
+			if (rawModeCount == 0) {
+				originalConfig = exec(new String[] { "sh", "-c", "stty -g < /dev/tty" });
+			}
 			exec(new String[] { "sh", "-c", "stty raw -echo < /dev/tty" });
+			rawModeCount++;
 		} catch (Exception e) {
-			// ignore; fall back to normal input behavior
 		}
 	}
 
-	public static void disableRawMode() {
+	public static synchronized void disableRawMode() {
 		if (!isUnixLike() || originalConfig == null) return;
 		try {
-			// restore saved settings
-			exec(new String[] { "sh", "-c", "stty " + originalConfig + " < /dev/tty" });
-			originalConfig = null;
+			rawModeCount--;
+			if (rawModeCount <= 0) {
+				exec(new String[] { "sh", "-c", "stty " + originalConfig + " < /dev/tty" });
+				originalConfig = null;
+				rawModeCount = 0;
+			}
 		} catch (Exception e) {
-			// ignore
 		}
 	}
 
