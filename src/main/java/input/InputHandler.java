@@ -1,6 +1,5 @@
 package input;
 
-import org.fusesource.jansi.AnsiConsole;
 import java.io.IOException;
 
 public class InputHandler {
@@ -10,13 +9,13 @@ public class InputHandler {
 
 	public Direction getInput() {
 		try {
-			int key = AnsiConsole.in.read();
+			int key = System.in.read();
 
 			switch (key) {
 				case 27: // ESC
-					int next = AnsiConsole.in.read();
+					int next = System.in.read();
 					if (next == 91) {
-						int arrow = AnsiConsole.in.read();
+						int arrow = System.in.read();
 						switch (arrow) {
 							case 65: return Direction.UP;
 							case 66: return Direction.DOWN;
