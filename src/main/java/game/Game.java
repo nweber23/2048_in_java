@@ -1,4 +1,3 @@
-// ...existing code...
 package game;
 
 import input.InputHandler;
@@ -68,7 +67,7 @@ public class Game {
 					running = false;
 					break;
 				case RESIZE:
-					renderer.handleResize();
+					renderer.handleResize(board);
 					break;
 			}
 
@@ -83,7 +82,6 @@ public class Game {
 		boolean useColors = true;
 		boolean useAsciiArt = false;
 
-		// Parse command line arguments
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equals("-s") && i + 1 < args.length) {
 				try {
@@ -98,18 +96,14 @@ public class Game {
 			}
 		}
 
-		// Enable raw mode as early as possible so the menu receives raw input.
 		try {
 			TerminalUtils.enableRawMode();
 		} catch (Throwable t) {
-			// ignore; best-effort
 		}
-		// Ensure terminal restored on exit
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			try {
 				TerminalUtils.disableRawMode();
 			} catch (Throwable t) {
-				// ignore
 			}
 		}));
 
