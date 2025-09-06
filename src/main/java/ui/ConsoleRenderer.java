@@ -97,6 +97,7 @@ public class ConsoleRenderer {
 		}
 
 		for (int line = 0; line < asciiArtHeight; line++) {
+			AnsiConsole.out.print("\r");
 			for (int j = 0; j < boardSize; j++) {
 				int value = board.getGrid()[row][j].getValue();
 				String[] art = asciiArtDigits.getOrDefault(value, asciiArtDigits.get(0));
@@ -119,9 +120,9 @@ public class ConsoleRenderer {
 	}
 	public void render(Board board) {
 		AnsiConsole.out.print(ansi().eraseScreen().cursor(1, 1));
-		AnsiConsole.out.println(ansi().bold().a("2048").reset());
-		AnsiConsole.out.println("Score: " + board.getScore());
-		AnsiConsole.out.println();
+		AnsiConsole.out.println("\r" + ansi().bold().a("2048").reset());
+		AnsiConsole.out.println("\r" + "Score: " + board.getScore());
+		AnsiConsole.out.println("\r");
 
 		for (int r = 0; r < board.getSize(); r++) {
 			if (useAsciiArt && asciiArtHeight > 0) {
@@ -131,12 +132,13 @@ public class ConsoleRenderer {
 			}
 		}
 
-		AnsiConsole.out.println();
+		AnsiConsole.out.println("\r");
 		AnsiConsole.out.flush();
 	}
 
 	private void renderNormalRow(Board board, int row) {
 		int cellWidth = 6;
+		AnsiConsole.out.print("\r");
 		for (int j = 0; j < board.getSize(); j++) {
 			int value = board.getGrid()[row][j].getValue();
 			String text = value == 0 ? "." : String.valueOf(value);
@@ -174,14 +176,14 @@ public class ConsoleRenderer {
 	}
 
 	public void showWinMessage() {
-		AnsiConsole.out.println();
-		AnsiConsole.out.println(ansi().fg(GREEN).bold().a("You reached " + utils.Constants.WIN_VALUE + "!").reset());
+		AnsiConsole.out.println("\r");
+		AnsiConsole.out.println("\r" + ansi().fg(GREEN).bold().a("You reached " + utils.Constants.WIN_VALUE + "!").reset());
 		AnsiConsole.out.flush();
 	}
 
 	public void showGameOverMessage() {
-		AnsiConsole.out.println();
-		AnsiConsole.out.println(ansi().fg(RED).bold().a("Game Over").reset());
+		AnsiConsole.out.println("\r");
+		AnsiConsole.out.println("\r" + ansi().fg(RED).bold().a("Game Over").reset());
 		AnsiConsole.out.flush();
 	}
 
